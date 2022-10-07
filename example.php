@@ -7,7 +7,7 @@
  */
 
 require_once( __DIR__ .'/vendor/autoload.php' ); # composer
-#require_once( __DIR__ .'/src/ZTEMF286Api.php' ); # direct
+#require_once( __DIR__ .'/src/Api.php' ); # direct
 
 $zteApi = new ZTEMF286\Api('192.168.1.1');
 
