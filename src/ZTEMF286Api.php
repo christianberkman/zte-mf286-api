@@ -1,9 +1,9 @@
 <?php
 /**
-  * Zte4gRouterApi
+  * ZTE MF286 Api
   * 2022 by Christian Berkman
   *
-  * Main Class File
+  * Class File
 */
 
 namespace ZTEMF286;

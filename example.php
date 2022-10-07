@@ -1,7 +1,7 @@
 <?php
 /**
  * ZTE MF286 Api
- * Christian Berkman 2022
+ * 2022 by Christian Berkman
  * 
  * Example file
  */
