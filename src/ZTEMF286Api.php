@@ -170,22 +170,22 @@ class Api{
   }
 
   /**
-   * Attempt to detect if the WAN is down
+   * Returns if WAN is connected
    *
    * @return bool
    */
-  public function detectWanDown(){
+  public function isWanConnected(){
     // Get network status info
     $params = $this->getCmd(['network_type', 'ppp_status']);
 
       // Limited Service
-      if($params['network_type'] == 'Limited Service') return true;
+      if($params['network_type'] == 'Limited Service') return false;
       
       // Disconnected
-      if($params['ppp_status'] == 'ppp_disconnected') return true;
+      if($params['ppp_status'] == 'ppp_disconnected') return false;
 
-    // All Ok?
-    return false;        
+    // WAN seems connected
+    return true;        
   }
 
   /**

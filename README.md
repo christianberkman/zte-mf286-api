@@ -24,8 +24,8 @@ Return parameters given in `$commands` (see Get Commands.md) as  array
 ## setCmd(string $command, array $postFields)
 Post `$command` including `$postFields`. 
 
-## detectWanDown()
-Returns boolean TRUE if WAN is disconnected
+## isWanConnected()
+Returns if WAN is connected, returns boolean
 
 ## connect()
 Attempt to connect the network, returns boolean
