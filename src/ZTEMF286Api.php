@@ -45,7 +45,7 @@ class Api{
    * @param array|string $commands Commands to get
    * @param bool $decode Return decoded JSON string
    * 
-   * @return array decoded JSON response
+   * @return mixed false if failed, string or array on success
    */
   public function getCmd($commands = [], $decode = true){
     // Force array
@@ -61,6 +61,7 @@ class Api{
       CURLOPT_POST => false
     ]);
     $response = curl_exec($this->ch);
+    if($response == false) return null;
 
     if($decode) return json_decode($response, true);
     else return $response;
@@ -73,7 +74,7 @@ class Api{
    * 
    * @return array decoded JSON response
    */
-  public function setCmd($command, $postFields = []){
+  public function setCmd($command, $postFields = [], $decode = true){
     // Make sure postFields is array
     if(!is_array($postFields)) $postFields = [$postFields];
     
@@ -99,7 +100,10 @@ class Api{
     );
 
     $response = curl_exec($this->ch);
-    return json_decode($response, true);
+    if($response == false) return null;
+    
+    if($decode) return json_decode($response, true);
+    else return $response;
   }
   
   /**
@@ -109,9 +113,10 @@ class Api{
    */
   public function login($routerPassword){
     $this->routerPassword = base64_encode($routerPassword);
-    $reponse = $this->setCmd('LOGIN', ['password' => $this->routerPassword]);
-    if($reponse['result'] == "0") return true;
-    else return false;
+    $response = $this->setCmd('LOGIN', ['password' => $this->routerPassword]);
+    if($response == null) return false;
+    if(!isset($response['result'])) return false;
+    return ($response['result'] == "0" ? true : false);
   }
 
   /**
@@ -122,11 +127,13 @@ class Api{
    */
   private function computeAD(){
     $version = $this->getCmd(['wa_inner_version,cr_version']);
+    if($version == false) return null;
     $versionString = $version['wa_inner_version'] . $version['cr_version'];
     
     $versionMd5 = md5($versionString);
 
     $rd = ($this->getCmd(['RD']))['RD'];
+    if($rd == false) return null;
     $adString = $versionMd5 . $rd;
     $ad = md5($adString);
 
@@ -142,7 +149,7 @@ class Api{
     $ad = $this->computeAD();    
     
     $result = $this->setCmd('DISCONNECT_NETWORK', ['AD' => $ad, 'notCallback' => 'true']);
-    return $result['result'];
+    return ( ($result['result'] ?? null) == 'success' ? true : false);
   }
 
   /**
@@ -154,7 +161,7 @@ class Api{
     $ad = $this->computeAD();
     
     $result =$this->setCmd('CONNECT_NETWORK', ['AD' => $ad, 'notCallback' => 'true']);
-    return $result['result'];
+    return ( ($result['result'] ?? null) == 'success' ? true : false);
   }
 
   /**
@@ -166,7 +173,7 @@ class Api{
     $ad = $this->computeAD();    
     
     $result = $this->setCmd('REBOOT_DEVICE', ['AD' => $ad]);
-    return ($result['result'] == 'success' ? true : false);
+    return ( ($result['result'] ?? null) == 'success' ? true : false);
   }
 
   /**
@@ -196,15 +203,18 @@ class Api{
   public function dataUsage(){
     // Get parameters
     $p = $this->getCmd( ['monthly_rx_bytes', 'monthly_tx_bytes'] );  
-  
+    if(!isset($p['monthly_rx_bytes']) || !isset($p['monthly_tx_bytes'])) return false;
+
     // Return Array
     $r = [];
   
     // rx, tx, total bytes
-    $cmdArray = $this->cmdArray;
-    $r['rx']['bytes']     = $p['monthly_rx_bytes'];
-    $r['tx']['bytes']     = $p['monthly_tx_bytes'];
+    $r['rx']['bytes']     = intval($p['monthly_rx_bytes']);
+    $r['tx']['bytes']     = intval($p['monthly_tx_bytes']);
     $r['total']['bytes']  = $r['rx']['bytes'] + $r['tx']['bytes'];
+
+    // Return false if total is equal to zero, indicates error
+    if($r['total']['bytes'] == 0) return false;
 
     // Convert bytes to Gib and round off to 2 decimal points
     $r['rx']['GiB']       = round( $r['rx']['bytes'] / $this::BYTE_TO_GIB, 2 );
