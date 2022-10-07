@@ -1,6 +1,7 @@
 composer.phar
 /vendor/
 
+test.php
 zte-cookie
 
 log.txt

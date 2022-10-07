@@ -158,6 +158,18 @@ class Api{
   }
 
   /**
+   * Restart the router
+   *
+   * @return bool
+   */
+  public function restart(){
+    $ad = $this->computeAD();    
+    
+    $result = $this->setCmd('REBOOT_DEVICE', ['AD' => $ad]);
+    return ($result['result'] == 'success' ? true : false);
+  }
+
+  /**
    * Attempt to detect if the WAN is down
    *
    * @return bool

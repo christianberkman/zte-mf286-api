@@ -32,3 +32,6 @@ Attempt to connect the network, returns boolean
 
 ## reconnect()
 Attempt to disconnect, returns boolean
+
+## restart()
+Attempt to restart the router, returns boolean
