@@ -7,7 +7,7 @@ API For ZTE MF284 4G Router, possible for related types as well
 composer require christianberkman/zte-mf286-api
 ```
 
-````
+```
 <?php
     $zteApi = new ZTEMF286\Api('192.168.1.1');
     $login = $zteApi->login('password'); // returns boolean
