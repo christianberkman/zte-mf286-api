@@ -9,11 +9,17 @@ composer require christianberkman/zte-mf286-api
 
 ```
 <?php
-    $zteApi = new ZTEMF286\Api('192.168.1.1');
+    $zteApi = new ZTEMF286\Api('192.168.1.1', '/path/to/cookie');
     $login = $zteApi->login('password'); // returns boolean
 ```
 
 # Public functions
+## constructor(sting $routerIp, string $cookiePath = __DIR__)
+Construct the class and set the router's IP, optional cookie path
+
+## setCookiePath(string $path)
+Checks if the path is writeable and sets the cookie path if true. Cookie filename is `zte-cookie`.
+
 ## login(string $routerPassword)  
 Login to the router using provided password, returns boolean.
 
