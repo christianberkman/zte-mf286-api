@@ -20,6 +20,7 @@ class Api{
      */
   	private	$routerIp, // Router's IP
           	$routerPassword, // Password (base64 encoded by constructor)
+            $cookiePath, // Path to cookie file
           	$ch, // cURL handler
             $setCmdUrl, // complete url for setting commands set by constructor
             $getCmdUrl; // complete url for getting commands set by constructor
@@ -30,14 +31,31 @@ class Api{
    * @param string $routerPassword Router's password
    * @return void
    */
-  public function __construct($routerIp){
-    // Set ip, password, setOpt, getOpt
+  public function __construct($routerIp, $cookiePath = __DIR__){
+    // Set ip, setOpt, getOpt
     $this->routerIp = $routerIp;
     $this->setUrl = "http://{$this->routerIp}/goform/goform_set_cmd_process";
     $this->getUrl = "http://{$this->routerIp}/goform/goform_get_cmd_process";
 
     // Start Curl Session
-    $this->ch = curl_init();  
+    $this->ch = curl_init();
+    curl_setopt_array($this->ch, [
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_REFERER => "http://{$this->routerIp}/",
+      CURLOPT_URL => $this->setUrl
+    ]);
+    $this->setCookiePath($cookiePath);
+  }
+
+  public function setCookiePath($path){
+    // Check if path if writable
+    if(!is_writable($path)) throw new \Exception("Cookie path '{$path}' is not writable.");
+    
+    // Set cookie path and file
+    $this->cookiePath = $path;
+
+    // Curl option
+    curl_setopt($this->ch, CURLOPT_COOKIEJAR, $this->cookiePath . '/zte-cookie');
   }
 
   /**
@@ -90,10 +108,6 @@ class Api{
     
     curl_setopt_array($this->ch, 
       [
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_COOKIEJAR => 'zte-cookie',
-        CURLOPT_REFERER => "http://{$this->routerIp}/",
-        CURLOPT_URL => $this->setUrl,
         CURLOPT_POST => true,
         CURLOPT_POSTFIELDS => $postFieldsString,
       ]
