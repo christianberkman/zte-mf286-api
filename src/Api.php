@@ -14,6 +14,7 @@ class Api{
      * Constants
      */
     const BYTE_TO_GIB = 1073741824; // 1024^3
+    const BYTE_TO_MIB = 1048576; // 1024^2
 
     /**
      * Private properties, accessible through __get()
@@ -237,6 +238,26 @@ class Api{
 
     // Return array
     return $r;
+  }
+
+  /**
+   * Return realtime rx and tx bytes/s, KiB/s, MiB/s
+   * @return array
+   */
+  public function realtime(){
+    $realtime = $this->getCmd(['realtime_rx_bytes', 'realtime_rx_thrpt', 'realtime_tx_bytes', 'realtime_tx_thrpt' ]);
+    
+    $return = [
+      'rx_mib' => round( ($realtime['realtime_rx_thrpt'] / $this::BYTE_TO_MIB), 2),
+      'rx_kib' => round( ($realtime['realtime_rx_thrpt'] / 1024), 2),
+      'rx_bytes' => $realtime['realtime_rx_thrpt'],
+      'tx_mib' => round( ($realtime['realtime_tx_thrpt'] / $this::BYTE_TO_MIB), 2),
+      'tx_kib' => round( ($realtime['realtime_tx_thrpt'] / 1024), 2),
+      'tx_bytes' => $realtime['realtime_tx_thrpt']
+    ];
+
+    return $return;
+
   }
   
   /**

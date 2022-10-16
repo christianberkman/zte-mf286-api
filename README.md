@@ -46,25 +46,24 @@ Attempt to restart the router, returns boolean
 ## dataUsage()
 Report the datausage as an array, returns false if failed
 ```
-Array
-(
-    [rx] => Array
-        (
-            [bytes] => 116867051568
-            [GiB] => 108.84
-        )
+[rx] => Array   
+    [bytes] => 116867051568
+    [GiB] => 108.84
+[tx] => Array
+    [bytes] => 17771215964
+    [GiB] => 16.55
+[total] => Array
+    [bytes] => 134638267532
+    [GiB] => 125.39
+```
 
-    [tx] => Array
-        (
-            [bytes] => 17771215964
-            [GiB] => 16.55
-        )
-
-    [total] => Array
-        (
-            [bytes] => 134638267532
-            [GiB] => 125.39
-        )
-
-)
+## realtime()
+Return realtime rx and tx bytes/s, KiB/s, MiB/s. Often 0 is returned as is the upload/download monitor in the modem's interface
+```
+    [rx_mib] => 0
+    [rx_kib] => 0.34
+    [rx_bytes] => 348
+    [tx_mib] => 0
+    [tx_kib] => 0.18
+    [tx_bytes] => 188
 ```
