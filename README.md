@@ -67,3 +67,19 @@ Return realtime rx and tx bytes/s, KiB/s, MiB/s. Often 0 is returned as is the u
     [tx_kib] => 0.18
     [tx_bytes] => 188
 ```
+## connectedDevices()
+Return an array of connected devices
+```
+[wifi]
+    [0]
+        [mac_addr] => 1C:F2:9A:56:09:73
+        [hostname] => Google-Nest-Mini
+        [ip_addr] => 192.168.1.161
+        [addr_type] => 2
+        [ssid_index] => 0
+    [..]
+[lan]
+    [..]
+[all]
+    [..] // wifi and lan combined
+```

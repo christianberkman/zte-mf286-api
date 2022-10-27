@@ -67,16 +67,20 @@ class Api{
    * @return mixed false if failed, string or array on success
    */
   public function getCmd($commands = [], $decode = true){
-    // Force array
-    if(is_string($commands)) $commands = [$commands];
-    if(!is_array($commands)) throw new Exception('Commands should be string or array');
-    
-    // Compile cmd string
-    $cmdString = implode('%2C', $commands);
+    // String: no multi data
+    if(is_string($commands)){
+      $mutli = 0;
+      $cmdString = $commands;
+    } 
+    // Array: multi data
+    if(is_array($commands)){
+      $multi = 1;
+      $cmdString = implode('%2C', $commands);
+    }
     
     // GET request to getUrl with command data
     curl_setopt_array($this->ch, [
-      CURLOPT_URL => "{$this->getUrl}?multi_data=1&isTest=false&cmd={$cmdString}",
+      CURLOPT_URL => "{$this->getUrl}?multi_data={$multi}&isTest=false&cmd={$cmdString}",
       CURLOPT_POST => false
     ]);
     $response = curl_exec($this->ch);
@@ -258,6 +262,21 @@ class Api{
 
     return $return;
 
+  }
+
+  /**
+   * Return an array of connected devices via LAN and WiFi
+   *
+   * @return array
+   */
+  public function connectedDevices(){
+    $wifi = $this->getCmd('station_list')['station_list'];
+    $lan = $this->getCmd('lan_station_list')['lan_station_list'];
+    $all = array_merge(
+      array_values($wifi), array_values($lan)
+    );
+
+    return ['wifi' => array_values($wifi), 'lan' => array_values($lan), 'all' => $all];
   }
   
   /**
