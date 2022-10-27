@@ -69,7 +69,7 @@ class Api{
   public function getCmd($commands = [], $decode = true){
     // String: no multi data
     if(is_string($commands)){
-      $mutli = 0;
+      $multi = 0;
       $cmdString = $commands;
     } 
     // Array: multi data
