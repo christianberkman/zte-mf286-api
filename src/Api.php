@@ -69,18 +69,18 @@ class Api{
   public function getCmd($commands = [], $decode = true){
     // String: no multi data
     if(is_string($commands)){
-      $multi = 0;
+      $multi = null;
       $cmdString = $commands;
     } 
     // Array: multi data
     if(is_array($commands)){
-      $multi = 1;
+      $multi = '&multi_data=1';
       $cmdString = implode('%2C', $commands);
     }
     
     // GET request to getUrl with command data
     curl_setopt_array($this->ch, [
-      CURLOPT_URL => "{$this->getUrl}?multi_data={$multi}&isTest=false&cmd={$cmdString}",
+      CURLOPT_URL => "{$this->getUrl}?isTest=false&cmd={$cmdString}{$multi}",
       CURLOPT_POST => false
     ]);
     $response = curl_exec($this->ch);
@@ -271,6 +271,7 @@ class Api{
    */
   public function connectedDevices(){
     $wifi = $this->getCmd('station_list')['station_list'];
+    var_dump($wifi);
     $lan = $this->getCmd('lan_station_list')['lan_station_list'];
     $all = array_merge(
       array_values($wifi), array_values($lan)
