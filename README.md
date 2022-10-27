@@ -24,7 +24,7 @@ Checks if the path is writeable and sets the cookie path if true. Cookie filenam
 Login to the router using provided password, returns boolean.
 
 ## getCmd(array $commands, bool $decode = true)
-Return parameters given in `$commands` (see Get Commands.md) as array
+Return parameters given in `$commands` (see (get-commands.md)[https://github.com/christianberkman/zte-mf286-api/blob/main/get-commands.md]) as array
 Set `$decode` to true to decode json response into an array, false to return the response as a string. Returns null if failed.
 
 ## setCmd(string $command, array $postFields, bool $decode = true)
