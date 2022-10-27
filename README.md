@@ -14,6 +14,19 @@ composer require christianberkman/zte-mf286-api
 ```
 
 # Public functions
+* [constructor](#constructorsting-routerip-string-cookiepath--dir)
+* [setCookiePath]([#setCookiePathstring-path](#setcookiepathstring-path))
+* [login]([#loginstring-path](#loginstring-routerpassword))
+* [getCMd](#getcmdarray-commands-bool-decode--true)
+* [setCMd](#setcmdstring-command-array-postfields-bool-decode--true)
+* [isWanConnected](#iswanconnected)
+* [connect](#connect)
+* [reconnect](#reconnect)
+* [restart](#restart)
+* [dataUsage](#datausage)
+* [realtime](#realtime)
+* [connectedDevices](#connecteddevices)
+
 ## constructor(sting $routerIp, string $cookiePath = __DIR__)
 Construct the class and set the router's IP, optional cookie path
 
